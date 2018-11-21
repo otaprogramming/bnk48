@@ -9,7 +9,7 @@ import {
   Col
 } from "reactstrap";
 // react plugin used to create charts
-import {HorizontalBar,Bar} from "react-chartjs-2";
+import {HorizontalBar} from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
 
 import Stats from "components/Stats/Stats.jsx";
@@ -43,7 +43,6 @@ const createData=(array)=> {
 const getStellar= async ()=>{
   const loop = arrayP.map(async (bnk,key)=>{
     let name = bnk.name;
-    let publicKey = bnk.publicKey;
     const res = await server.accounts()
     .accountId(bnk.publicKey)
     .call()
