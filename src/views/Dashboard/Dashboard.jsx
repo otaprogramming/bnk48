@@ -150,6 +150,11 @@ class Dashboard extends React.Component {
  timer = () => {
    this.queryData();
  };
+
+ componentWillUnmount() {
+   clearInterval(this.state.intervalId);
+ }
+ 
  queryData = async() => {
    let data = await getStellar(); // createData(arrayP);
    let labels = data.map((bnk,key)=>{
