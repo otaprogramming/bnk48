@@ -60,7 +60,7 @@ const getStellar= async ()=>{
     // console.log(bnk);
     let name = bnk.name;
     let publicKey = bnk.publicKey;
-    let vote = '1';
+    // let vote = '1';
     // let temp = [];
     const res = await server.accounts()
     .accountId(bnk.publicKey)
