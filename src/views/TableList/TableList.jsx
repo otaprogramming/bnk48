@@ -13,7 +13,7 @@ import { thead, tbody } from "variables/general";
 import stellar from 'stellar-sdk';
 
 const server = new stellar.Server('https://horizon-testnet.stellar.org');
-const head = ["Name","Vote", "Key"];
+const head = ["Name","Vote", "PublicKey"];
 
 const createData=(array)=> {
   const res=[];
@@ -22,7 +22,7 @@ const createData=(array)=> {
     let publicKey = bnk.publicKey;
     res.push([
       name,
-      '0',
+      'NaN',
       publicKey
     ]);
     // data.push([name,String(res.balances[0].balance),publicKey]);
@@ -45,26 +45,19 @@ const createData=(array)=> {
 }
 
 const getStellar= async ()=>{
-  const data=[];
-  // arrayP.forEach((bnk)=>{
+  // const data=[];
+  // for (const bnk of arrayP) {
   //   let name = bnk.name;
   //   let publicKey = bnk.publicKey;
   //   let vote = '1';
   //   // let temp = [];
-  //   server.accounts()
+  //   const res = await server.accounts()
   //   .accountId(bnk.publicKey)
   //   .call()
-  //   .then((res)=> {
-  //     data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
-  //     // temp.push(String(parseInt(res.balances[0].balance)));
-  //   })
-  //   .catch((err)=> {
-  //     console.error(err);
-  //   });
-  //   data.push([name,vote,publicKey]);
-  // });
-
-  for (const bnk of arrayP) {
+  //   data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+  // }
+  const loop = arrayP.map(async (bnk,key)=>{
+    // console.log(bnk);
     let name = bnk.name;
     let publicKey = bnk.publicKey;
     let vote = '1';
@@ -72,8 +65,11 @@ const getStellar= async ()=>{
     const res = await server.accounts()
     .accountId(bnk.publicKey)
     .call()
-    data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
-  }
+    return ([name,String(parseInt(res.balances[0].balance)),publicKey]);
+    // data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+  })
+  const data = await Promise.all(loop)
+  // console.log(data);
 
   data.sort(function(a, b) {//sort name
     var nameA = a[0].toUpperCase(); // ignore upper and lowercase
@@ -102,15 +98,17 @@ class RegularTables extends React.Component {
 
   queryData = async() => {
     let data = await getStellar();
-    // let data2 = createData(arrayP);
-    // console.log(data);
-    // console.log(data2);
     this.setState({data:data});
   };
 
    componentDidMount() {
+    this.queryData();
     var intervalId =  setInterval(this.timer, 10000);
     this.setState({ intervalId: intervalId });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   }
 
   timer = () => {
