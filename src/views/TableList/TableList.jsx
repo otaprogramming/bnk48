@@ -103,7 +103,7 @@ class RegularTables extends React.Component {
 
    componentDidMount() {
     this.queryData();
-    var intervalId =  setInterval(this.timer, 15000);
+    var intervalId =  setInterval(this.timer, 30000);
     this.setState({ intervalId: intervalId });
   }
 

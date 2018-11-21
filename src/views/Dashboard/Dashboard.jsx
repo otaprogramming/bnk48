@@ -144,7 +144,7 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     this.queryData();
-    var intervalId =  setInterval(this.timer, 15000);
+    var intervalId =  setInterval(this.timer, 30000);
     this.setState({ intervalId: intervalId });
  }
  timer = () => {
@@ -184,8 +184,7 @@ class Dashboard extends React.Component {
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <CardTitle>Horizontal Bar</CardTitle>
-                <p className="card-category">BNK48 vote</p>
+                <CardTitle>BNK48 Voting Chart</CardTitle>
               </CardHeader>
               <CardBody>
                 <HorizontalBar
