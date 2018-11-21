@@ -9,14 +9,61 @@ import {
   Col
 } from "reactstrap";
 // react plugin used to create charts
-import {HorizontalBar} from "react-chartjs-2";
+import {HorizontalBar,Bar} from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
 
 import Stats from "components/Stats/Stats.jsx";
+import arrayP from "module/array_pubkey.json";
+import stellar from 'stellar-sdk';
 
-// import {
-//   dashboard24HoursPerformanceChart
-// } from "variables/charts.jsx";
+const server = new stellar.Server('https://horizon-testnet.stellar.org');
+const createData=(array)=> {
+  const res=[];
+  array.forEach((bnk)=>{
+    let name = bnk.name;
+    res.push([
+      name,
+      '0'
+    ]);
+    res.sort(function(a, b) {//sort name
+      var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+      var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+  });
+  return res;
+}
+
+const getStellar= async ()=>{
+  const loop = arrayP.map(async (bnk,key)=>{
+    let name = bnk.name;
+    let publicKey = bnk.publicKey;
+    const res = await server.accounts()
+    .accountId(bnk.publicKey)
+    .call()
+    return ([name,String(parseInt(res.balances[0].balance))]);
+  })
+  const data = await Promise.all(loop)
+  data.sort(function(a, b) {//sort name
+    var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+    var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
+  return data;
+}
+
 const createChart = (data)=>{
   return ({
     data: canvas => {
@@ -72,8 +119,15 @@ const createChart = (data)=>{
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
+    let data = createData(arrayP);
+    let labels = data.map((bnk,key)=>{
+      return (bnk[0]);
+    });
+    let vote = data.map((bnk,key)=>{
+      return (bnk[1]);
+    });
     let chart = {
-      labels: ['a','b','c'],
+      labels: labels,
       datasets: [
         {
           borderColor: "#6bd098",
@@ -81,7 +135,7 @@ class Dashboard extends React.Component {
           pointRadius: 0,
           pointHoverRadius: 0,
           borderWidth: 3,
-          data: [1,2,3]
+          data: vote
         }
       ]
     };
@@ -90,26 +144,39 @@ class Dashboard extends React.Component {
     }
   }
   componentDidMount() {
-    let chart = {
-      labels: ['a','b','c'],
-      datasets: [
-        {
-          borderColor: "#6bd098",
-          backgroundColor: "#6bd098",
-          pointRadius: 0,
-          pointHoverRadius: 0,
-          borderWidth: 3,
-          data: [30,20,1]
-        }
-      ]
-    };
-    console.log(chart.labels);
-    console.log(chart.datasets[0].data);
-    this.setState({ chart: createChart(chart) });
-   // this.queryData();
-   // var intervalId =  setInterval(this.timer, 10000);
-   // this.setState({ intervalId: intervalId });
+    this.queryData();
+    var intervalId =  setInterval(this.timer, 10000);
+    this.setState({ intervalId: intervalId });
  }
+ timer = () => {
+   this.queryData();
+ };
+ queryData = async() => {
+   let data = await getStellar(); // createData(arrayP);
+   let labels = data.map((bnk,key)=>{
+     return (bnk[0]);
+   });
+   let vote = data.map((bnk,key)=>{
+     return (bnk[1]);
+   });
+   let chart = {
+     labels: labels,
+     datasets: [
+       {
+         borderColor: "#6bd098",
+         backgroundColor: "#6bd098",
+         pointRadius: 0,
+         pointHoverRadius: 0,
+         borderWidth: 3,
+         data: vote
+       }
+     ]
+   };
+   // console.log(chart.labels);
+   // console.log(chart.datasets[0].data);
+   this.setState({ chart: createChart(chart) });
+ };
+
   render() {
     const chart = this.state.chart;
     return (
@@ -126,7 +193,7 @@ class Dashboard extends React.Component {
                   data={chart.data}
                   options={chart.options}
                   width={400}
-                  height={100}
+                  height={400}
                 />
               </CardBody>
               <CardFooter>
@@ -149,191 +216,3 @@ class Dashboard extends React.Component {
 }
 
 export default Dashboard;
-/*
-<Row>
-  <Col xs={12} sm={6} md={6} lg={3}>
-    <Card className="card-stats">
-      <CardBody>
-        <Row>
-          <Col xs={5} md={4}>
-            <div className="icon-big text-center">
-              <i className="nc-icon nc-globe text-warning" />
-            </div>
-          </Col>
-          <Col xs={7} md={8}>
-            <div className="numbers">
-              <p className="card-category">Capacity</p>
-              <CardTitle tag="p">150GB</CardTitle>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "fas fa-sync-alt",
-              t: "Update Now"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-  <Col xs={12} sm={6} md={6} lg={3}>
-    <Card className="card-stats">
-      <CardBody>
-        <Row>
-          <Col xs={5} md={4}>
-            <div className="icon-big text-center">
-              <i className="nc-icon nc-money-coins text-success" />
-            </div>
-          </Col>
-          <Col xs={7} md={8}>
-            <div className="numbers">
-              <p className="card-category">Revenue</p>
-              <CardTitle tag="p">$ 1,345</CardTitle>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "far fa-calendar",
-              t: "Last day"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-  <Col xs={12} sm={6} md={6} lg={3}>
-    <Card className="card-stats">
-      <CardBody>
-        <Row>
-          <Col xs={5} md={4}>
-            <div className="icon-big text-center">
-              <i className="nc-icon nc-vector text-danger" />
-            </div>
-          </Col>
-          <Col xs={7} md={8}>
-            <div className="numbers">
-              <p className="card-category">Errors</p>
-              <CardTitle tag="p">23</CardTitle>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "far fa-clock",
-              t: "In the last hour"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-  <Col xs={12} sm={6} md={6} lg={3}>
-    <Card className="card-stats">
-      <CardBody>
-        <Row>
-          <Col xs={5} md={4}>
-            <div className="icon-big text-center">
-              <i className="nc-icon nc-favourite-28 text-primary" />
-            </div>
-          </Col>
-          <Col xs={7} md={8}>
-            <div className="numbers">
-              <p className="card-category">Followers</p>
-              <CardTitle tag="p">+45K</CardTitle>
-            </div>
-          </Col>
-        </Row>
-      </CardBody>
-      <CardFooter>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "fas fa-sync-alt",
-              t: "Update now"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-</Row>
-<Row>
-  <Col xs={12} sm={12} md={4}>
-    <Card>
-      <CardHeader>
-        <CardTitle>Email Statistics</CardTitle>
-        <p className="card-category">Last Campaign Performance</p>
-      </CardHeader>
-      <CardBody>
-        <Pie
-          data={dashboardEmailStatisticsChart.data}
-          options={dashboardEmailStatisticsChart.options}
-        />
-      </CardBody>
-      <CardFooter>
-        <div className="legend">
-          <i className="fa fa-circle text-primary" /> Opened{" "}
-          <i className="fa fa-circle text-warning" /> Read{" "}
-          <i className="fa fa-circle text-danger" /> Deleted{" "}
-          <i className="fa fa-circle text-gray" /> Unopened
-        </div>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "fas fa-calendar-alt",
-              t: " Number of emails sent"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-  <Col xs={12} sm={12} md={8}>
-    <Card className="card-chart">
-      <CardHeader>
-        <CardTitle>NASDAQ: AAPL</CardTitle>
-        <p className="card-category">Line Chart With Points</p>
-      </CardHeader>
-      <CardBody>
-        <Line
-          data={dashboardNASDAQChart.data}
-          options={dashboardNASDAQChart.options}
-          width={400}
-          height={100}
-        />
-      </CardBody>
-      <CardFooter>
-        <div className="chart-legend">
-          <i className="fa fa-circle text-info" /> Tesla Model S{" "}
-          <i className="fa fa-circle text-warning" /> BMW 5 Series
-        </div>
-        <hr />
-        <Stats>
-          {[
-            {
-              i: "fas fa-check",
-              t: " Data information certified"
-            }
-          ]}
-        </Stats>
-      </CardFooter>
-    </Card>
-  </Col>
-</Row>
-*/
