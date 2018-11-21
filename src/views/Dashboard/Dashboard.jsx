@@ -9,32 +9,122 @@ import {
   Col
 } from "reactstrap";
 // react plugin used to create charts
-import { Line, Pie } from "react-chartjs-2";
+import {HorizontalBar} from "react-chartjs-2";
 // function that returns a color based on an interval of numbers
 
 import Stats from "components/Stats/Stats.jsx";
 
-import {
-  dashboard24HoursPerformanceChart,
-  dashboardEmailStatisticsChart,
-  dashboardNASDAQChart
-} from "variables/charts.jsx";
+// import {
+//   dashboard24HoursPerformanceChart
+// } from "variables/charts.jsx";
+const createChart = (data)=>{
+  return ({
+    data: canvas => {
+      return data;
+    },
+    options: {
+      legend: {
+        display: false
+      },
+
+      tooltips: {
+        enabled: true
+      },
+
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              fontColor: "#9f9f9f",
+              beginAtZero: false,
+              maxTicksLimit: 5
+              // padding: 20
+            },
+            gridLines: {
+              drawBorder: false,
+              zeroLineColor: "#ccc",
+              color: "rgba(255,255,255,0.05)"
+            }
+          }
+        ],
+
+        xAxes: [
+          {
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: "rgba(255,255,255,0.1)",
+              zeroLineColor: "transparent",
+              display: false
+            },
+            ticks: {
+              beginAtZero:true,
+              padding: 20,
+              fontColor: "#9f9f9f"
+            }
+          }
+        ]
+      }
+    }
+  });
+}
 
 class Dashboard extends React.Component {
+  constructor(props) {
+    super(props);
+    let chart = {
+      labels: ['a','b','c'],
+      datasets: [
+        {
+          borderColor: "#6bd098",
+          backgroundColor: "#6bd098",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: [1,2,3]
+        }
+      ]
+    };
+    this.state = {
+      chart:createChart(chart)
+    }
+  }
+  componentDidMount() {
+    let chart = {
+      labels: ['a','b','c'],
+      datasets: [
+        {
+          borderColor: "#6bd098",
+          backgroundColor: "#6bd098",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          borderWidth: 3,
+          data: [30,20,1]
+        }
+      ]
+    };
+    console.log(chart.labels);
+    console.log(chart.datasets[0].data);
+    this.setState({ chart: createChart(chart) });
+   // this.queryData();
+   // var intervalId =  setInterval(this.timer, 10000);
+   // this.setState({ intervalId: intervalId });
+ }
   render() {
+    const chart = this.state.chart;
     return (
       <div className="content">
         <Row>
           <Col xs={12}>
             <Card>
               <CardHeader>
-                <CardTitle>Users Behavior</CardTitle>
-                <p className="card-category">24 Hours performance</p>
+                <CardTitle>Horizontal Bar</CardTitle>
+                <p className="card-category">BNK48 vote</p>
               </CardHeader>
               <CardBody>
-                <Line
-                  data={dashboard24HoursPerformanceChart.data}
-                  options={dashboard24HoursPerformanceChart.options}
+                <HorizontalBar
+                  data={chart.data}
+                  options={chart.options}
                   width={400}
                   height={100}
                 />
@@ -45,7 +135,7 @@ class Dashboard extends React.Component {
                   {[
                     {
                       i: "fas fa-history",
-                      t: " Updated 3 minutes ago"
+                      t: " Updated 0 minutes ago"
                     }
                   ]}
                 </Stats>
