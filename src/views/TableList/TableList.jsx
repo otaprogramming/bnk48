@@ -8,69 +8,133 @@ import {
   Row,
   Col
 } from "reactstrap";
-
+import arrayP from "module/array_pubkey.json";
 import { thead, tbody } from "variables/general";
+import stellar from 'stellar-sdk';
+
+const server = new stellar.Server('https://horizon-testnet.stellar.org');
+const head = ["Name","Vote", "Key"];
+
+const createData=(array)=> {
+  const res=[];
+  array.forEach((bnk)=>{
+    let name = bnk.name;
+    let publicKey = bnk.publicKey;
+    res.push([
+      name,
+      '0',
+      publicKey
+    ]);
+    // data.push([name,String(res.balances[0].balance),publicKey]);
+    res.sort(function(a, b) {//sort name
+      var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+      var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    res.sort(function(a, b) {//sort vote
+      return a[1] - b[1];
+    });
+  });
+  return res;
+}
+
+const getStellar= async ()=>{
+  const data=[];
+  // arrayP.forEach((bnk)=>{
+  //   let name = bnk.name;
+  //   let publicKey = bnk.publicKey;
+  //   let vote = '1';
+  //   // let temp = [];
+  //   server.accounts()
+  //   .accountId(bnk.publicKey)
+  //   .call()
+  //   .then((res)=> {
+  //     data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+  //     // temp.push(String(parseInt(res.balances[0].balance)));
+  //   })
+  //   .catch((err)=> {
+  //     console.error(err);
+  //   });
+  //   data.push([name,vote,publicKey]);
+  // });
+
+  for (const bnk of arrayP) {
+    let name = bnk.name;
+    let publicKey = bnk.publicKey;
+    let vote = '1';
+    // let temp = [];
+    const res = await server.accounts()
+    .accountId(bnk.publicKey)
+    .call()
+    data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+  }
+
+  data.sort(function(a, b) {//sort name
+    var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+    var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
+  data.sort(function(a, b) {//sort vote
+    return a[1] - b[1];
+  });
+  return data;
+}
 
 class RegularTables extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data:createData(arrayP)
+    }
+  }
+
+  queryData = async() => {
+    let data = await getStellar();
+    // let data2 = createData(arrayP);
+    // console.log(data);
+    // console.log(data2);
+    this.setState({data:data});
+  };
+
+   componentDidMount() {
+    var intervalId =  setInterval(this.timer, 10000);
+    this.setState({ intervalId: intervalId });
+  }
+
+  timer = () => {
+    this.queryData();
+  };
+
   render() {
+    const data = this.state.data;
     return (
       <div className="content">
         <Row>
           <Col xs={12}>
-            <Card>
-              <CardHeader>
-                <CardTitle tag="h4">Simple Table</CardTitle>
-              </CardHeader>
-              <CardBody>
-                <Table responsive>
-                  <thead className="text-primary">
-                    <tr>
-                      {thead.map((prop, key) => {
-                        if (key === thead.length - 1)
-                          return (
-                            <th key={key} className="text-right">
-                              {prop}
-                            </th>
-                          );
-                        return <th key={key}>{prop}</th>;
-                      })}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tbody.map((prop, key) => {
-                      return (
-                        <tr key={key}>
-                          {prop.data.map((prop, key) => {
-                            if (key === thead.length - 1)
-                              return (
-                                <td key={key} className="text-right">
-                                  {prop}
-                                </td>
-                              );
-                            return <td key={key}>{prop}</td>;
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </Table>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xs={12}>
             <Card className="card-plain">
               <CardHeader>
-                <CardTitle tag="h4">Table on Plain Background</CardTitle>
-                <p className="card-category"> Here is a subtitle for this table</p>
+                <CardTitle tag="h4">Vote Table</CardTitle>
               </CardHeader>
               <CardBody>
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      {thead.map((prop, key) => {
-                        if (key === thead.length - 1)
+                      {head.map((prop, key) => {
+                        if (key === head.length - 1)
                           return (
-                            <th key={key} className="text-right">
+                            <th key={key} className="text-center">
                               {prop}
                             </th>
                           );
@@ -79,10 +143,10 @@ class RegularTables extends React.Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {tbody.map((prop, key) => {
+                    {data.map((prop, key) => {
                       return (
                         <tr key={key}>
-                          {prop.data.map((prop, key) => {
+                          {prop.map((prop, key) => {
                             if (key === thead.length - 1)
                               return (
                                 <td key={key} className="text-right">
