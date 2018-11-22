@@ -10,9 +10,9 @@ import {
 } from "reactstrap";
 import arrayP from "module/array_pubkey.json";
 import { thead, tbody } from "variables/general";
-import stellar from 'stellar-sdk';
+// import stellar from 'stellar-sdk';
 
-const server = new stellar.Server('https://horizon-testnet.stellar.org');
+// const server = new stellar.Server('https://horizon-testnet.stellar.org');
 const head = ["Name", "PublicKey"];
 
 const createData=(array)=> {
