@@ -1,5 +1,5 @@
 {
-  "name": "paper-dashboard-react",
+  "name": "bnk48",
   "version": "1.0.0",
   "private": true,
   "homepage": "https://otaprogramming.github.io/bnk48",
@@ -28,7 +28,9 @@
     "scss": "node-sass --include-path ./src --include-path ./node_modules src/ -o src/",
     "lint:check": "eslint . --ext=js,jsx;  exit 0",
     "lint:fix": "eslint . --ext=js,jsx --fix;  exit 0",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start"
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -46,5 +48,8 @@
     "@types/googlemaps": "3.30.13",
     "@types/markerclustererplus": "2.1.33",
     "jquery": "3.3.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1"
   }
 }
