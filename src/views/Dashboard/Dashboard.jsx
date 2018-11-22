@@ -36,6 +36,9 @@ const createData=(array)=> {
       }
       return 0;
     });
+    res.sort(function(a, b) {//sort vote
+      return a[1] - b[1];
+    });
   });
   return res;
 }
@@ -59,6 +62,9 @@ const getStellar= async ()=>{
       return 1;
     }
     return 0;
+  });
+  res.sort(function(a, b) {//sort vote
+    return a[1] - b[1];
   });
   return data;
 }
@@ -144,7 +150,7 @@ class Dashboard extends React.Component {
   }
   componentDidMount() {
     this.queryData();
-    var intervalId =  setInterval(this.timer, 30000);
+    var intervalId =  setInterval(this.timer, 20000);
     this.setState({ intervalId: intervalId });
  }
  timer = () => {
@@ -154,7 +160,7 @@ class Dashboard extends React.Component {
  componentWillUnmount() {
    clearInterval(this.state.intervalId);
  }
- 
+
  queryData = async() => {
    let data = await getStellar(); // createData(arrayP);
    let labels = data.map((bnk,key)=>{

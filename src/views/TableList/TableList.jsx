@@ -13,7 +13,7 @@ import { thead, tbody } from "variables/general";
 import stellar from 'stellar-sdk';
 
 const server = new stellar.Server('https://horizon-testnet.stellar.org');
-const head = ["Name","Vote", "PublicKey"];
+const head = ["Name", "PublicKey"];
 
 const createData=(array)=> {
   const res=[];
@@ -22,7 +22,6 @@ const createData=(array)=> {
     let publicKey = bnk.publicKey;
     res.push([
       name,
-      'NaN',
       publicKey
     ]);
     // data.push([name,String(res.balances[0].balance),publicKey]);
@@ -37,56 +36,56 @@ const createData=(array)=> {
       }
       return 0;
     });
-    res.sort(function(a, b) {//sort vote
-      return a[1] - b[1];
-    });
+    // res.sort(function(a, b) {//sort vote
+    //   return a[1] - b[1];
+    // });
   });
   return res;
 }
 
-const getStellar= async ()=>{
-  // const data=[];
-  // for (const bnk of arrayP) {
-  //   let name = bnk.name;
-  //   let publicKey = bnk.publicKey;
-  //   let vote = '1';
-  //   // let temp = [];
-  //   const res = await server.accounts()
-  //   .accountId(bnk.publicKey)
-  //   .call()
-  //   data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
-  // }
-  const loop = arrayP.map(async (bnk,key)=>{
-    // console.log(bnk);
-    let name = bnk.name;
-    let publicKey = bnk.publicKey;
-    // let vote = '1';
-    // let temp = [];
-    const res = await server.accounts()
-    .accountId(bnk.publicKey)
-    .call()
-    return ([name,String(parseInt(res.balances[0].balance)),publicKey]);
-    // data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
-  })
-  const data = await Promise.all(loop)
-  // console.log(data);
-
-  data.sort(function(a, b) {//sort name
-    var nameA = a[0].toUpperCase(); // ignore upper and lowercase
-    var nameB = b[0].toUpperCase(); // ignore upper and lowercase
-    if (nameA < nameB) {
-      return -1;
-    }
-    if (nameA > nameB) {
-      return 1;
-    }
-    return 0;
-  });
-  data.sort(function(a, b) {//sort vote
-    return a[1] - b[1];
-  });
-  return data;
-}
+// const getStellar= async ()=>{
+//   // const data=[];
+//   // for (const bnk of arrayP) {
+//   //   let name = bnk.name;
+//   //   let publicKey = bnk.publicKey;
+//   //   let vote = '1';
+//   //   // let temp = [];
+//   //   const res = await server.accounts()
+//   //   .accountId(bnk.publicKey)
+//   //   .call()
+//   //   data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+//   // }
+//   const loop = arrayP.map(async (bnk,key)=>{
+//     // console.log(bnk);
+//     let name = bnk.name;
+//     let publicKey = bnk.publicKey;
+//     // let vote = '1';
+//     // let temp = [];
+//     const res = await server.accounts()
+//     .accountId(bnk.publicKey)
+//     .call()
+//     return ([name,String(parseInt(res.balances[0].balance)),publicKey]);
+//     // data.push([name,String(parseInt(res.balances[0].balance)),publicKey]);
+//   })
+//   const data = await Promise.all(loop)
+//   // console.log(data);
+//
+//   data.sort(function(a, b) {//sort name
+//     var nameA = a[0].toUpperCase(); // ignore upper and lowercase
+//     var nameB = b[0].toUpperCase(); // ignore upper and lowercase
+//     if (nameA < nameB) {
+//       return -1;
+//     }
+//     if (nameA > nameB) {
+//       return 1;
+//     }
+//     return 0;
+//   });
+//   // data.sort(function(a, b) {//sort vote
+//   //   return a[1] - b[1];
+//   // });
+//   // return data;
+// }
 
 class RegularTables extends React.Component {
   constructor(props) {
@@ -95,21 +94,21 @@ class RegularTables extends React.Component {
       data:createData(arrayP)
     }
   }
+  //
+  // queryData = async() => {
+  //   let data = await getStellar();
+  //   this.setState({data:data});
+  // };
 
-  queryData = async() => {
-    let data = await getStellar();
-    this.setState({data:data});
-  };
-
-   componentDidMount() {
-    this.queryData();
-    var intervalId =  setInterval(this.timer, 30000);
-    this.setState({ intervalId: intervalId });
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId);
-  }
+  //  componentDidMount() {
+  //   // this.queryData();
+  //   // var intervalId =  setInterval(this.timer, 30000);
+  //   // this.setState({ intervalId: intervalId });
+  // }
+  //
+  // componentWillUnmount() {
+  //   // clearInterval(this.state.intervalId);
+  // }
 
   timer = () => {
     this.queryData();
