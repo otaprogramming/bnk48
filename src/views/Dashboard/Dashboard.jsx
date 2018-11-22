@@ -37,7 +37,7 @@ const createData=(array)=> {
       return 0;
     });
     res.sort(function(a, b) {//sort vote
-      return a[1] - b[1];
+      return b[1] - a[1];
     });
   });
   return res;
@@ -64,7 +64,7 @@ const getStellar= async ()=>{
     return 0;
   });
   data.sort(function(a, b) {//sort vote
-    return a[1] - b[1];
+    return b[1] - a[1];
   });
   return data;
 }
