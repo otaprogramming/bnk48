@@ -63,7 +63,7 @@ const getStellar= async ()=>{
     }
     return 0;
   });
-  res.sort(function(a, b) {//sort vote
+  data.sort(function(a, b) {//sort vote
     return a[1] - b[1];
   });
   return data;
