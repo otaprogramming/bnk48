@@ -1,7 +1,7 @@
 {
   "main.css": "/bnk48/static/css/main.346d34f8.chunk.css",
-  "main.js": "/bnk48/static/js/main.d58a437b.chunk.js",
-  "main.js.map": "/bnk48/static/js/main.d58a437b.chunk.js.map",
+  "main.js": "/bnk48/static/js/main.6196fed6.chunk.js",
+  "main.js.map": "/bnk48/static/js/main.6196fed6.chunk.js.map",
   "static/css/1.a27a2073.chunk.css": "/bnk48/static/css/1.a27a2073.chunk.css",
   "static/js/1.555606e9.chunk.js": "/bnk48/static/js/1.555606e9.chunk.js",
   "static/js/1.555606e9.chunk.js.map": "/bnk48/static/js/1.555606e9.chunk.js.map",
@@ -11,6 +11,6 @@
   "static/css/1.a27a2073.chunk.css.map": "/bnk48/static/css/1.a27a2073.chunk.css.map",
   "static/css/main.346d34f8.chunk.css.map": "/bnk48/static/css/main.346d34f8.chunk.css.map",
   "index.html": "/bnk48/index.html",
-  "precache-manifest.f381ca7fab25fa18f151ed040f86a3a1.js": "/bnk48/precache-manifest.f381ca7fab25fa18f151ed040f86a3a1.js",
+  "precache-manifest.f8963882c5d9510b26e660283cb2ee11.js": "/bnk48/precache-manifest.f8963882c5d9510b26e660283cb2ee11.js",
   "service-worker.js": "/bnk48/service-worker.js"
 }

@@ -20,15 +20,15 @@ self.__precacheManifest = [
     "url": "/bnk48/static/js/runtime~main.55351891.js"
   },
   {
-    "revision": "d58a437b216eb20ffaec",
-    "url": "/bnk48/static/js/main.d58a437b.chunk.js"
+    "revision": "6196fed6dfd26d175738",
+    "url": "/bnk48/static/js/main.6196fed6.chunk.js"
   },
   {
     "revision": "555606e97b2af97d2ebe",
     "url": "/bnk48/static/js/1.555606e9.chunk.js"
   },
   {
-    "revision": "d58a437b216eb20ffaec",
+    "revision": "6196fed6dfd26d175738",
     "url": "/bnk48/static/css/main.346d34f8.chunk.css"
   },
   {
@@ -36,7 +36,7 @@ self.__precacheManifest = [
     "url": "/bnk48/static/css/1.a27a2073.chunk.css"
   },
   {
-    "revision": "94964100832464f2844099c9e927d4c0",
+    "revision": "88c96c1381028d0b7d959cc1e93179af",
     "url": "/bnk48/index.html"
   }
 ];
