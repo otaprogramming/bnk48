@@ -1,38 +1,20 @@
-// txhash createAccount
-//1a902e1e9c1ab61ce7c240337dc899fec027cf7e56e6f085cb78ea4f8e12de25
-// official key
-// Public Key	GB5LIPG22NXNPODZVZL6QJNZTWDNXTRFKNLFXJ4S3LZDQIAXDKG3GOYZ
-// Secret Key	SDX2WSMWA5JVOQFFNP7A4IO7CSVWHLAL6D6GIUQB4EA2QFQ5I4NG6SRW
-var stellar = require('stellar-sdk');
-var arrayS = require('./array_secret.json');
+const stellar = require('stellar-sdk');
+const memberKeys = require('./member_keys.json');
+
 const server = new stellar.Server('https://horizon-testnet.stellar.org');
 stellar.Network.useTestNetwork();
-// gen keypair code
-// console.log(arrayS);
-// create file
-// var arrayS=[];
-// var arrayP=[];
-// for(num in names){
-//   // console.log(name);
-//   let key = stellar.Keypair.random();
-//   arrayS.push({name:names[num],keypair:key.secret()});
-//   arrayP.push({name:names[num],keypair:key.publicKey()});
-// }
-// console.log(JSON.stringify(arrayS));
-// console.log(JSON.stringify(arrayP));
-const run = async() =>{
-  const sourcekey = stellar.Keypair.fromSecret(
-    'SDX2WSMWA5JVOQFFNP7A4IO7CSVWHLAL6D6GIUQB4EA2QFQ5I4NG6SRW'
-  );
-  const sourceAccount = await server.loadAccount(sourcekey.publicKey());
-  var destination = [];
-  // arrayS.forEach((bnk)=> {
-  //   console.log(bnk.name+" "+stellar.Keypair.fromSecret(bnk.secret).publicKey());
-  // });
+
+const firstWalletSecret = 'SDX2WSMWA5JVOQFFNP7A4IO7CSVWHLAL6D6GIUQB4EA2QFQ5I4NG6SRW'
+const firstWalletKeypair = stellar.Keypair.fromSecret(firstWalletSecret);
+const firstWalletPublicKey = firstWalletKeypair.publicKey()
+
+const run = async () => {
+  const sourceAccount = await server.loadAccount(firstWalletPublicKey);
   let transaction = new stellar.TransactionBuilder(sourceAccount);
-  arrayS.forEach((bnk) => {
+
+  memberKeys.forEach((bnk) => {
     const options = {
-      destination: stellar.Keypair.fromSecret(bnk.secret).publicKey(),
+      destination: bnk.publicKey,
       startingBalance: '1'
     };
     const xdrOperation = stellar.Operation.createAccount(options);
@@ -40,8 +22,10 @@ const run = async() =>{
   });
 
   transaction = transaction.build();
-  transaction.sign(sourcekey);
+  transaction.sign(firstWalletKeypair);
+
   const transactionResult = await server.submitTransaction(transaction);
   console.log(transactionResult);
 };
+
 run();

@@ -1,17 +1,17 @@
-var stellar = require('stellar-sdk');
-// var arrayS = require('./array_secret.json');
+const stellar = require('stellar-sdk');
+const memberNames = require('./member_names.json')
+
 const server = new stellar.Server('https://horizon-testnet.stellar.org');
 stellar.Network.useTestNetwork();
-// gen keypair code
-console.log(arrayS);
-create file
-var arrayS=[];
-var arrayP=[];
-for(num in names){
-  // console.log(name);
+
+let memberKeys = [];
+for (i in memberNames) {
   let key = stellar.Keypair.random();
-  arrayS.push({name:names[num],keypair:key.secret()});
-  arrayP.push({name:names[num],keypair:key.publicKey()});
+  memberKeys.push({
+    name: memberNames[i],
+    publicKey: key.publicKey(),
+    secret: key.secret(),
+  });
 }
-// console.log(JSON.stringify(arrayS));
-console.log(JSON.stringify(arrayP));
+
+console.log(JSON.stringify(memberKeys));
